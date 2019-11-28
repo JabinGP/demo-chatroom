@@ -1,0 +1,20 @@
+[server]
+  name = "demo-chatroom"
+  addr = ":8888"
+
+[server.logger]
+  level = "debug"
+
+# 数据库相关
+[database]
+  driver = "mysql"
+
+[mysql]
+  dbHost = "mike.jabingp.cn"
+  dbPort = "3306"
+  dbName = "demo"
+  dbParams = "charset=uft8&parseTime=true&loc=Local"
+  dbUser = "root"
+  dbPasswd = "zhibinNB6"
+
+
