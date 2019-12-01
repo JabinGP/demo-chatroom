@@ -10,11 +10,11 @@
   driver = "mysql"
 
 [mysql]
-  dbHost = "mike.jabingp.cn"
+  dbHost = "****"
   dbPort = "3306"
   dbName = "demo"
   dbParams = "parseTime=true&loc=Local"
-  dbUser = "root"
-  dbPasswd = "zhibinNB6"
+  dbUser = "****"
+  dbPasswd = "****"
 
 

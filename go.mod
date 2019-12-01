@@ -3,6 +3,11 @@ module github.com/JabinGP/demo-chatroom
 go 1.13
 
 require (
+	github.com/go-sql-driver/mysql v1.4.1
+	github.com/gorilla/schema v1.1.0 // indirect
+	github.com/iris-contrib/formBinder v5.0.0+incompatible // indirect
+	github.com/jinzhu/gorm v1.9.11
+	github.com/kataras/iris v11.1.1+incompatible
 	github.com/kataras/iris/v12 v12.0.1
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
