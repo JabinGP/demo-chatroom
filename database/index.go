@@ -1,18 +1,60 @@
 package database
 
 import (
+	"errors"
+	"fmt"
 	"log"
+	"sync"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/JabinGP/demo-chatroom/config"
+	"github.com/JabinGP/demo-chatroom/models"
 	"github.com/jinzhu/gorm"
 )
 
-// Con connect and return *gorm.DB
-func Con(dbType string, conURL string) (*gorm.DB, error) {
-	dbCon, err := gorm.Open(dbType, conURL)
+var once sync.Once
+
+// DB database connect
+var DB *gorm.DB
+
+func init() {
+	once.Do(func() {
+		dbType := config.Viper.GetString("database.driver")
+		switch dbType {
+		case "mysql":
+			initMysql()
+		default:
+			panic(errors.New("only support mysql"))
+		}
+
+		initTable()
+	})
+}
+
+// init when use mysql
+func initMysql() {
+	dbConf := models.DbConf{
+		DbType:   config.Viper.GetString("database.driver"),
+		DbHost:   config.Viper.GetString("mysql.dbHost"),
+		DbPort:   config.Viper.GetString("mysql.dbPort"),
+		DbName:   config.Viper.GetString("mysql.dbName"),
+		DbParams: config.Viper.GetString("mysql.dbParams"),
+		DbUser:   config.Viper.GetString("mysql.dbUser"),
+		DbPasswd: config.Viper.GetString("mysql.dbPasswd"),
+	}
+
+	dbType := dbConf.DbType
+	dbURL := fmt.Sprintf("%s:%s@(%s:%s)/%s?%s", dbConf.DbUser, dbConf.DbPasswd, dbConf.DbHost, dbConf.DbPort, dbConf.DbName, dbConf.DbParams)
+
+	var err error
+	DB, err = gorm.Open(dbType, dbURL)
 	if err != nil {
 		log.Printf("Open mysql failed,err:%v\n", err)
-		return nil, err
+		panic(err)
 	}
-	return dbCon, nil
+}
+
+// auto init table if not exist
+func initTable() {
+	// auto create table
+	DB.AutoMigrate(&models.User{})
 }
