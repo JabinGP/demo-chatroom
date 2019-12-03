@@ -6,6 +6,7 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/gorilla/schema v1.1.0 // indirect
 	github.com/iris-contrib/formBinder v5.0.0+incompatible // indirect
+	github.com/iris-contrib/middleware/jwt v0.0.0-20191111233249-6e1f5f92190e
 	github.com/jinzhu/gorm v1.9.11
 	github.com/kataras/iris v11.1.1+incompatible
 	github.com/kataras/iris/v12 v12.0.1

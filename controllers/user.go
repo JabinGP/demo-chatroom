@@ -5,6 +5,7 @@ import (
 
 	"github.com/JabinGP/demo-chatroom/database"
 	"github.com/JabinGP/demo-chatroom/models"
+	"github.com/JabinGP/demo-chatroom/tools"
 	"github.com/kataras/iris/v12"
 )
 
@@ -12,21 +13,22 @@ var db = database.DB
 
 // Login user login
 func Login(ctx iris.Context) {
-	type loginReq struct {
+	type Req struct {
 		Username string `json:"username"`
 		Passwd   string `json:"passwd"`
 	}
 
-	type loginRes struct {
+	type Res struct {
 		Username string `json:"username"`
+		Token    string `json:"token"`
 	}
 
-	req := loginReq{}
+	req := Req{}
 	ctx.ReadJSON(&req)
 
 	user := models.User{}
 	// if username unexisted
-	if err := db.Select("passwd").Where("username = ?", req.Username).First(&user).Error; err != nil {
+	if err := db.Where("username = ?", req.Username).First(&user).Error; err != nil {
 		log.Println(err)
 		ctx.JSON(new(models.ResModel).WithError("unexisted username"))
 		return
@@ -39,22 +41,29 @@ func Login(ctx iris.Context) {
 	}
 
 	// ok
-	res := loginRes{
-		Username: req.Username,
+	// get token
+	token, err := tools.GetJWTString(user.Username, user.ID)
+	if err != nil {
+		ctx.JSON(new(models.ResModel).WithError(err.Error()))
+	}
+
+	res := Res{
+		Username: user.Username,
+		Token:    token,
 	}
 	ctx.JSON(new(models.ResModel).WithData(res))
 }
 
 // Register user register
 func Register(ctx iris.Context) {
-	type registerReq struct {
+	type Req struct {
 		Username string `json:"username"`
 		Passwd   string `json:"passwd"`
 	}
-	type registerRes struct {
+	type Res struct {
 		Username string `json:"username"`
 	}
-	req := registerReq{}
+	req := Req{}
 	ctx.ReadJSON(&req)
 
 	// username and passwd can't be blank
@@ -82,8 +91,27 @@ func Register(ctx iris.Context) {
 		return
 	}
 
-	res := registerRes{
-		Username: req.Username,
+	res := Res{
+		Username: newUser.Username,
 	}
+	ctx.JSON(new(models.ResModel).WithData(res))
+}
+
+// GetUserList return user list
+func GetUserList(ctx iris.Context) {
+	type Req struct {
+		Username string `json:"username"`
+	}
+	type Res struct {
+		ID       int64  `json:"id"`
+		Username string `json:"username"`
+	}
+
+	req := Req{}
+	ctx.ReadQuery(&req)
+	res := []Res{}
+
+	db.Table("users").Select("id,username").Where("username like ?", "%"+req.Username+"%").Find(&res)
+
 	ctx.JSON(new(models.ResModel).WithData(res))
 }

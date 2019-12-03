@@ -6,6 +6,7 @@ import (
 	"github.com/kataras/iris/v12"
 
 	"github.com/JabinGP/demo-chatroom/controllers"
+	"github.com/JabinGP/demo-chatroom/middleware"
 	"github.com/JabinGP/demo-chatroom/models"
 )
 
@@ -17,5 +18,7 @@ func Route(app *iris.Application) {
 	{
 		v1.Post("/login", controllers.Login)
 		v1.Post("/user", controllers.Register)
+		v1.Get("/user", middleware.JWT.Serve, controllers.GetUserList)
 	}
+
 }
