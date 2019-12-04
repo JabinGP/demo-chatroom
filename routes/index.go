@@ -17,8 +17,13 @@ func Route(app *iris.Application) {
 	v1 := app.Party("v1")
 	{
 		v1.Post("/login", controllers.Login)
+
 		v1.Post("/user", controllers.Register)
-		v1.Get("/user", middleware.JWT.Serve, controllers.GetUserList)
+		v1.Get("/user", controllers.GetUserList)
+		v1.Put("/user", middleware.JWT.Serve, controllers.UpdateUser)
+
+		v1.Post("/message", middleware.JWT.Serve, controllers.SendMessage)
+		v1.Get("/message", middleware.JWT.Serve, controllers.GetMessageList)
 	}
 
 }

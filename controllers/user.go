@@ -3,13 +3,11 @@ package controllers
 import (
 	"log"
 
-	"github.com/JabinGP/demo-chatroom/database"
 	"github.com/JabinGP/demo-chatroom/models"
 	"github.com/JabinGP/demo-chatroom/tools"
+	"github.com/iris-contrib/middleware/jwt"
 	"github.com/kataras/iris/v12"
 )
-
-var db = database.DB
 
 // Login user login
 func Login(ctx iris.Context) {
@@ -20,6 +18,7 @@ func Login(ctx iris.Context) {
 
 	type Res struct {
 		Username string `json:"username"`
+		ID       uint   `json:"id"`
 		Token    string `json:"token"`
 	}
 
@@ -49,6 +48,7 @@ func Login(ctx iris.Context) {
 
 	res := Res{
 		Username: user.Username,
+		ID:       user.ID,
 		Token:    token,
 	}
 	ctx.JSON(new(models.ResModel).WithData(res))
@@ -59,6 +59,9 @@ func Register(ctx iris.Context) {
 	type Req struct {
 		Username string `json:"username"`
 		Passwd   string `json:"passwd"`
+		Gender   int64  `json:"gender"`
+		Age      int64  `json:"age"`
+		Interest string `json:"interest"`
 	}
 	type Res struct {
 		Username string `json:"username"`
@@ -73,7 +76,7 @@ func Register(ctx iris.Context) {
 	}
 
 	exist := models.User{}
-	db.Select("username").First(&exist)
+	db.Where("username = ?", req.Username).Select("username").First(&exist)
 
 	// can't be same username
 	if exist.Username != "" {
@@ -85,6 +88,9 @@ func Register(ctx iris.Context) {
 	newUser := models.User{
 		Username: req.Username,
 		Passwd:   req.Passwd,
+		Gender:   req.Gender,
+		Age:      req.Age,
+		Interest: req.Interest,
 	}
 	if err := db.Create(&newUser).Error; err != nil {
 		ctx.JSON(new(models.ResModel).WithError("insert into database error"))
@@ -101,17 +107,79 @@ func Register(ctx iris.Context) {
 func GetUserList(ctx iris.Context) {
 	type Req struct {
 		Username string `json:"username"`
+		ID       uint   `json:"id"`
 	}
 	type Res struct {
-		ID       int64  `json:"id"`
+		ID       uint   `json:"id"`
 		Username string `json:"username"`
+		Gender   int64  `json:"gender"`
+		Age      int64  `json:"age"`
+		Interest string `json:"interest"`
 	}
 
 	req := Req{}
 	ctx.ReadQuery(&req)
 	res := []Res{}
 
-	db.Table("users").Select("id,username").Where("username like ?", "%"+req.Username+"%").Find(&res)
+	if req.ID != 0 {
+		db.Table("users").Where("username like ? and id = ?", "%"+req.Username+"%", req.ID).Find(&res)
+	} else {
+		db.Table("users").Where("username like ?", "%"+req.Username+"%").Find(&res)
+	}
 
+	ctx.JSON(new(models.ResModel).WithData(res))
+}
+
+// UpdateUser update user information
+func UpdateUser(ctx iris.Context) {
+	type Req struct {
+		Gender   int64  `json:"gender"`
+		Age      int64  `json:"age"`
+		Interest string `json:"interest"`
+	}
+
+	type Res struct {
+		ID       uint   `json:"id"`
+		Username string `json:"username"`
+		Gender   int64  `json:"gender"`
+		Age      int64  `json:"age"`
+		Interest string `json:"interest"`
+	}
+
+	req := Req{}
+	ctx.ReadJSON(&req)
+	jwtInfo := ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)
+	userID := uint(jwtInfo["userId"].(float64))
+
+	user := models.User{}
+	if err := db.Table("users").Where("id = ?", userID).First(&user).Error; err != nil {
+		ctx.JSON(new(models.ResModel).WithError(err.Error()))
+		return
+	}
+
+	if req.Gender != 0 {
+		user.Gender = req.Gender
+	}
+
+	if req.Age != 0 {
+		user.Age = req.Age
+	}
+
+	if req.Interest != "" {
+		user.Interest = req.Interest
+	}
+
+	if err := db.Table("users").Where("id = ?", userID).Update(&user).Error; err != nil {
+		ctx.JSON(new(models.ResModel).WithError(err.Error()))
+		return
+	}
+
+	res := Res{
+		ID:       userID,
+		Username: user.Username,
+		Gender:   user.Gender,
+		Age:      user.Age,
+		Interest: user.Interest,
+	}
 	ctx.JSON(new(models.ResModel).WithData(res))
 }

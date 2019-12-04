@@ -57,4 +57,5 @@ func initMysql() {
 func initTable() {
 	// auto create table
 	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.Message{})
 }
