@@ -9,6 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/JabinGP/demo-chatroom/config"
+	"github.com/JabinGP/demo-chatroom/middleware"
 	"github.com/JabinGP/demo-chatroom/routes"
 )
 
@@ -25,6 +26,11 @@ func main() {
 	app.Use(recover.New())
 	// add logger to log the requests to the terminal
 	app.Use(logger.New())
+
+	// globally allow options method to enable CORS
+	app.AllowMethods(iris.MethodOptions)
+	// add global CORS handler
+	app.Use(middleware.CORS)
 
 	// router
 	routes.Route(app)
