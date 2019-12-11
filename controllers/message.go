@@ -38,7 +38,7 @@ func SendMessage(ctx iris.Context) {
 // GetMessageList get message that send to me
 func GetMessageList(ctx iris.Context) {
 	type Req struct {
-		Time      int64 `json:"time"`
+		BeginID   uint  `json:"beginId"`
 		BeginTime int64 `json:"beginTime"`
 		EndTime   int64 `json:"endTime"`
 	}
@@ -57,25 +57,27 @@ func GetMessageList(ctx iris.Context) {
 
 	msgList := []Res{}
 
-	tmpDB := db.Table("messages").
+	tmpDB := db.
+		Table("messages").
 		Joins("left join users on messages.sender_id = users.id").
 		Select(`messages.id,
 						unix_timestamp(messages.send_time) as send_time, 
 						users.username,
 						messages.sender_id,
-						messages.content`)
+						messages.content`).
+		Where(`(messages.receiver_id = ? 
+						or messages.receiver_id = 0
+						or messages.sender_id = ?)`,
+			userID,
+			userID).
+		Where(`messages.id > ?`,
+			req.BeginID).
+		Where(`unix_timestamp(messages.send_time) >= ?`,
+			req.BeginTime).
+		Order("id")
 
-	if req.EndTime == 0 { // no limited end time
-		tmpDB = tmpDB.Where(`(messages.receiver_id = ? 
-													or messages.receiver_id = 0)
-													and unix_timestamp(messages.send_time) >= ? `,
-			userID, req.BeginTime)
-	} else { // has limited end time
-		tmpDB = tmpDB.Where(`(messages.receiver_id = ? 
-													or messages.receiver_id = 0)
-													and unix_timestamp(messages.send_time) >= ? 
-													and unix_timestamp(messages.send_time) <= ? `,
-			userID, req.BeginTime, req.EndTime)
+	if req.EndTime != 0 { // has limited end time
+		tmpDB = tmpDB.Where(`unix_timestamp(messages.send_time) <= ? `, req.EndTime)
 	}
 
 	if err := tmpDB.Find(&msgList).Error; err != nil {

@@ -10,6 +10,7 @@ func Route(app *iris.Application) {
 	routeRedirect(app)
 	v1 := app.Party("v1")
 	{
+		routeToken(v1)
 		routeUser(v1)
 		routeMessage(v1)
 	}
