@@ -1,14 +1,13 @@
-package models
+package pojo
 
 import "github.com/jinzhu/gorm"
 
-// User table users model
+// User user object model
 type User struct {
 	gorm.Model
 	Username string
 	Passwd   string
-	// 1 -> girl, 2 -> boy
-	Gender   int64
+	Gender   int64 // 1 -> girl, 2 -> boy
 	Age      int64
 	Interest string
 }

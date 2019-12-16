@@ -1,4 +1,4 @@
-package models
+package pojo
 
 import (
 	"time"
@@ -6,11 +6,13 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// Message table messages model
+// Message message object model
 type Message struct {
 	gorm.Model
 	SenderID   uint
+	Sender     User `gorm:"ForeignKey:SenderID"`
 	ReceiverID uint
+	Receiver   User `gorm:"ForeignKey:ReceiverID"`
 	Content    string
 	SendTime   time.Time
 }

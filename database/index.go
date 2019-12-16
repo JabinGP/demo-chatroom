@@ -7,7 +7,8 @@ import (
 	"sync"
 
 	"github.com/JabinGP/demo-chatroom/config"
-	"github.com/JabinGP/demo-chatroom/models"
+	"github.com/JabinGP/demo-chatroom/model"
+	"github.com/JabinGP/demo-chatroom/model/pojo"
 	"github.com/jinzhu/gorm"
 )
 
@@ -32,7 +33,7 @@ func init() {
 
 // init when use mysql
 func initMysql() {
-	dbConf := models.DbConf{
+	dbConf := model.DbConf{
 		DbType:   config.Viper.GetString("database.driver"),
 		DbHost:   config.Viper.GetString("mysql.dbHost"),
 		DbPort:   config.Viper.GetString("mysql.dbPort"),
@@ -56,6 +57,9 @@ func initMysql() {
 // auto init table if not exist
 func initTable() {
 	// auto create table
-	DB.AutoMigrate(&models.User{})
-	DB.AutoMigrate(&models.Message{})
+	DB.AutoMigrate(&pojo.User{})
+	DB.AutoMigrate(&pojo.Message{})
+
+	// Enable Logger, show detailed log
+	DB.LogMode(true)
 }

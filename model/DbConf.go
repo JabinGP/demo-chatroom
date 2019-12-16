@@ -1,4 +1,4 @@
-package models
+package model
 
 // DbConf database config
 type DbConf struct {

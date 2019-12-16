@@ -10,7 +10,7 @@ import (
 
 	"github.com/JabinGP/demo-chatroom/config"
 	"github.com/JabinGP/demo-chatroom/middleware"
-	"github.com/JabinGP/demo-chatroom/routes"
+	"github.com/JabinGP/demo-chatroom/route"
 )
 
 func main() {
@@ -33,7 +33,7 @@ func main() {
 	app.Use(middleware.CORS)
 
 	// router
-	routes.Route(app)
+	route.Route(app)
 
 	// listen in 8888 port
 	app.Run(iris.Addr(":8888"), iris.WithoutServerError(iris.ErrServerClosed))

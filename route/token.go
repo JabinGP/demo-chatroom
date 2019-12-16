@@ -1,11 +1,11 @@
-package routes
+package route
 
 import (
-	"github.com/JabinGP/demo-chatroom/controllers"
+	"github.com/JabinGP/demo-chatroom/controller"
 	"github.com/JabinGP/demo-chatroom/middleware"
 	"github.com/kataras/iris/v12/core/router"
 )
 
 func routeToken(party router.Party) {
-	party.Get("/tokeninfo", middleware.JWT.Serve, controllers.VerifyToken)
+	party.Get("/token/info", middleware.JWT.Serve, controller.GetTokenInfo)
 }

@@ -1,4 +1,4 @@
-package models
+package model
 
 // ResModel response model
 type ResModel struct {
