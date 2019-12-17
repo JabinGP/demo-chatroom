@@ -8,6 +8,5 @@ import (
 
 func routeMessage(party router.Party) {
 	party.Post("/message", middleware.JWT.Serve, controller.PostMessage)
-	// party.Get("/message", middleware.JWT.Serve, controller.GetMessageList)
 	party.Get("/message", middleware.JWT.Serve, controller.GetMessage)
 }

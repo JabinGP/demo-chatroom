@@ -7,7 +7,6 @@ import (
 	"sync"
 
 	"github.com/JabinGP/demo-chatroom/config"
-	"github.com/JabinGP/demo-chatroom/model"
 	"github.com/JabinGP/demo-chatroom/model/pojo"
 	"github.com/jinzhu/gorm"
 )
@@ -33,18 +32,16 @@ func init() {
 
 // init when use mysql
 func initMysql() {
-	dbConf := model.DbConf{
-		DbType:   config.Viper.GetString("database.driver"),
-		DbHost:   config.Viper.GetString("mysql.dbHost"),
-		DbPort:   config.Viper.GetString("mysql.dbPort"),
-		DbName:   config.Viper.GetString("mysql.dbName"),
-		DbParams: config.Viper.GetString("mysql.dbParams"),
-		DbUser:   config.Viper.GetString("mysql.dbUser"),
-		DbPasswd: config.Viper.GetString("mysql.dbPasswd"),
-	}
 
-	dbType := dbConf.DbType
-	dbURL := fmt.Sprintf("%s:%s@(%s:%s)/%s?%s", dbConf.DbUser, dbConf.DbPasswd, dbConf.DbHost, dbConf.DbPort, dbConf.DbName, dbConf.DbParams)
+	dbType := config.Viper.GetString("database.driver")
+	dbHost := config.Viper.GetString("mysql.dbHost")
+	dbPort := config.Viper.GetString("mysql.dbPort")
+	dbName := config.Viper.GetString("mysql.dbName")
+	dbParams := config.Viper.GetString("mysql.dbParams")
+	dbUser := config.Viper.GetString("mysql.dbUser")
+	dbPasswd := config.Viper.GetString("mysql.dbPasswd")
+
+	dbURL := fmt.Sprintf("%s:%s@(%s:%s)/%s?%s", dbUser, dbPasswd, dbHost, dbPort, dbName, dbParams)
 
 	var err error
 	DB, err = gorm.Open(dbType, dbURL)
