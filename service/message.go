@@ -20,13 +20,13 @@ func (messageService *MessageService) Query(beginID uint, beginTime time.Time, e
 	// Fill nested struct User
 	tmpDB := messageService.db.Preload("Sender").Preload("Receiver")
 
-	// Limit sender
-	if senderID != 0 {
-		tmpDB = tmpDB.Where("sender_id = ?", senderID)
-	}
+	// Query received message and sended message
+	tmpDB = tmpDB.Where("receiver_id in (?,?) or sender_id = ?", 0, receiverID, senderID)
 
-	// Limit receiver
-	tmpDB = tmpDB.Where("receiver_id in (?,?)", 0, receiverID)
+	// // Get sender message
+	// // if senderID != 0 {
+	// tmpDB = tmpDB.Or("sender_id = ?", senderID)
+	// // }
 
 	// Limit begin time
 	tmpDB = tmpDB.Where("send_time >= ?", beginTime)
@@ -36,7 +36,7 @@ func (messageService *MessageService) Query(beginID uint, beginTime time.Time, e
 	}
 
 	// Limit message id
-	tmpDB = tmpDB.Where("id >= ?", beginID)
+	tmpDB = tmpDB.Where("id > ?", beginID)
 
 	// Execute query
 	if err := tmpDB.Find(&msgList).Error; err != nil {

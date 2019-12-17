@@ -8,6 +8,7 @@ import (
 	"github.com/JabinGP/demo-chatroom/tool"
 	"github.com/iris-contrib/middleware/jwt"
 	"github.com/kataras/iris/v12"
+	"log"
 )
 
 // PostLogin user login
@@ -22,6 +23,7 @@ func PostLogin(ctx iris.Context) {
 		return
 	}
 
+	log.Println(user, req)
 	// If passwd are inconsistent
 	if user.Passwd != req.Passwd {
 		ctx.JSON(new(model.ResModel).WithError("username or passwd error"))

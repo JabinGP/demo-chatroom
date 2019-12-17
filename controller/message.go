@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"time"
 
 	"github.com/JabinGP/demo-chatroom/model"
@@ -41,7 +42,7 @@ func GetMessage(ctx iris.Context) {
 		req.BeginID,
 		time.Unix(req.BeginTime, 0),
 		time.Unix(req.EndTime, 0),
-		0,
+		userID,
 		userID,
 	)
 	if err != nil {
@@ -50,7 +51,7 @@ func GetMessage(ctx iris.Context) {
 	}
 
 	// Build response object
-	var resList []reso.GetMessage
+	resList := []reso.GetMessage{}
 
 	for _, msg := range msgList {
 		// Set private according to ReceiverID
@@ -72,5 +73,7 @@ func GetMessage(ctx iris.Context) {
 		// Add into resList
 		resList = append(resList, res)
 	}
+
+	log.Println(resList)
 	ctx.JSON(new(model.ResModel).WithData(resList))
 }

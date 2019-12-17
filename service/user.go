@@ -34,7 +34,7 @@ func (userService *UserService) Query(username string, id uint) ([]pojo.User, er
 func (userService *UserService) QueryByUsername(username string) (pojo.User, error) {
 	var user = pojo.User{}
 	user.Username = username
-	if err := userService.db.Model(&username).First(&user).Error; err != nil {
+	if err := userService.db.Model(&user).Where("username = ?", user.Username).First(&user).Error; err != nil {
 		return pojo.User{}, err
 	}
 
