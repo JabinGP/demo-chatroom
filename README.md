@@ -11,7 +11,33 @@ cd demo-chatroom
 go run demo-chatroom.go
 ```
 
-默认为8888端口，启动后访问`http://localhost:8888`即可
+默认为8888端口，启动后访问`http://localhost:8888`即可，或者访问演示地址`http://mike.jabingp.cn:8888`
+
+### 前端
+
+用了react，但是没用ui框架，很多的小细节上表现并不好，凑合着看吧，主要是做后端的demo。
+
+聊天框设置了窗口自动滚动到底端，但是api是react提供的，发现在许多浏览器上并不兼容，使用chrome浏览器可以解决这个问题。
+
+注册后手动返回选择登陆，消息框里面的红色名称为公共发言，灰色名称为私聊发言、可以在红色的框里面指定接收者的名称，如果不指定的话，默认是公共发言，指定后只有对应的用户能看到信息。
+
+### 后端
+
+api格式基于restful设计
+
+|功能|请求方式|地址|
+|-|-|-|
+|获取登录token|POST|http://localhost:8888/v1/login|
+|查找用户|GET|http://localhost:8888/v1/user|
+|注册|POST|http://localhost:8888/v1/user|
+|用户自己修改信息|PUT|http://localhost:8888/v1/user|
+|用户发送信息|POST|http://localhost:8888/v1/message|
+|用户获取信息|GET|http://localhost:8888/v1/message|
+|用户获取token信息|GET|http://localhost:8888/v1/token/info|
+
+详细请求参数可以在[demo-chatroom的postman-api文档](https://documenter.getpostman.com/view/7019042/SWECVaGy?version=latest)里查看。
+
+或者查看源码，请求参数在`model/reqo`里面查看，响应参数可以在`model/reso`里查看
 
 ## 前言
 
