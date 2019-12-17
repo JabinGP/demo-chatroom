@@ -27,10 +27,9 @@ func main() {
 	// Add global CORS handler
 	app.Use(middleware.CORS)
 
-	
 	// Router
 	route.Route(app)
 
 	// Listen in 8888 port
-	app.Run(iris.Addr(":8888"), iris.WithoutServerError(iris.ErrServerClosed))
+	app.Run(iris.Addr(config.Viper.GetString("server.addr")), iris.WithoutServerError(iris.ErrServerClosed))
 }

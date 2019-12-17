@@ -1,14 +1,29 @@
 # demo-chatroom
-go语言实现的简易聊天室，具有登录注册，私聊，群聊的功能
+
+go+iris+jwt+mysql+gorm+viper，iris项目实战简易聊天室，登录、注册、私聊、群聊。
 
 ## 项目启动
 
 ```cmd
 git clone https://github.com/JabinGP/demo-chatroom.git
 cd demo-chatroom
-// 复制config.toml.example 为 config.toml 并填写数据库信息
+// 复制config.toml.example 为 config.toml 并填写数据库信息，或者可选修改端口号
 go run demo-chatroom.go
 ```
+
+默认为8888端口，启动后访问`http://localhost:8888`即可
+
+## 前言
+
+聊天功能AJAX不是最好的选择，WebSocket比较好，但是被要求使用了AJAX所以没有选择后者。
+
+项目的前端比较简陋，因为只是作为demo使用。
+
+英语不是很好，代码注释用英语只是因为懒得切换输入法。
+
+第一次用go开发web项目，也是第一次用react写前端，由于前端没怎么注重项目结构（xjbx），就不放源码了，把项目编译后放在了assets文件夹下，可读性很差，但是可以和后端一起启动，不需要单独启动前端，比较方便查看效果。如果还有时间会考虑用原生写一个极简版的供大家参考原理。
+
+第一次用ORM操作数据库，感觉好难用，我还是宁愿手写sql，好多想要的效果翻半天文档都找不到解决方案，后期有机会考虑用sqlx重构。
 
 ## 项目来源
 
@@ -24,7 +39,7 @@ go run demo-chatroom.go
 4. 注册功能（要求用户有用户名、密码、性别、年龄、兴趣爱好）
 
 ## 实现思路
- 
+
 ### 登陆功能
 
 登陆功能这次选用`JWT`来实现，`JWT`和`Session`各自的优劣就不再赘述。
@@ -69,7 +84,7 @@ go run demo-chatroom.go
   - Viper 多类型配置文件读取支持
 
 - 数据存储
-  - Mysql 经典数据库 
+  - Mysql 经典数据库
 
 - 技术
   - JWT 签发登陆令牌
@@ -91,7 +106,6 @@ go run demo-chatroom.go
 - gender
 - age
 - interest
-
 
 数据库表结构
 
@@ -134,7 +148,6 @@ go run demo-chatroom.go
 
 > 以下结构出于个人经验，有不当之处请给出宝贵意见
 
-
 - route 路由层，负责将"\xxx\xxx"请求映射到对应的函数
 - middleware 中间件层，可以在执行函数前后进行拦截并处理，如登陆拦截
 - controller 控制层，存放与"\xxx\xxx"请求对应的函数，根据请求，调用业务层，并将数据进行格式封装返回
@@ -152,13 +165,12 @@ go run demo-chatroom.go
 ### pojo、reqo、reso都是什么
 
 - pojo
- 
+
   很好理解，就是数据库对应的实体，但不要求与数据库字段一一对应
 
 - reqo(request object)、reso(response object)
 
   不同接口请求的时候，可以携带的参数以及响应的数据也不同，所以为每一个接口设计一个对应的请求实体和响应实体
-
 
 ### controller、service、dao到底有什么区别
 

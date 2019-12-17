@@ -8,7 +8,7 @@ import (
 func Route(app *iris.Application) {
 	routeStatic(app)
 	routeRedirect(app)
-	v1 := app.Party("v1")
+	v1 := app.Party("/v1")
 	{
 		routeToken(v1)
 		routeUser(v1)

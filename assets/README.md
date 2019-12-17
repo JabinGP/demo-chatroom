@@ -4,35 +4,8 @@
 
 ## 技术栈
 
-- semantic ui
-- es6
+- react
 
-## 设计元素
+## 关于前端
 
-- 登录框
-  - 用户名  -- username
-  - 密码  -- passwd
-
-- 注册框
-  - 用户名  -- username
-  - 密码  -- passwd
-  - 性别  -- gender
-  - 年龄  -- age
-  - 兴趣爱好  -- interest
-
-- 个人信息展示框
-  - 用户名  -- username
-  - 性别  -- gender
-  - 年龄  -- age
-  - 兴趣爱好  -- interest
-
-- 聊天框
-  - 聊天信息
-    - 消息发送时间  -- sendTime
-    - 消息发送人名称  -- senderName
-    - 消息发送人id（页面不可见）  -- senderId
-    - 消息内容  -- content
-  
-  - 聊天信息输入框
-  - 发送按钮
-  - 发送对象选择
+其实也是第一次写react，没有用ui框架，自己用原生css写的样式，源码写的丑，就不放出来了，主要是展示一下效果
