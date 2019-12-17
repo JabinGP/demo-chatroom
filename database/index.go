@@ -30,7 +30,7 @@ func init() {
 	})
 }
 
-// init when use mysql
+// Init when use mysql
 func initMysql() {
 
 	dbType := config.Viper.GetString("database.driver")
@@ -51,9 +51,9 @@ func initMysql() {
 	}
 }
 
-// auto init table if not exist
+// Auto init table if not exist
 func initTable() {
-	// auto create table
+	// Auto create table
 	DB.AutoMigrate(&pojo.User{})
 	DB.AutoMigrate(&pojo.Message{})
 
