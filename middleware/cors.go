@@ -10,7 +10,7 @@ var CORS context.Handler
 
 func initCORS() {
 	CORS = cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
+		AllowedOrigins:   []string{"*"}, // Allows everything, use that to change the hosts.
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"*"}, // If do not set this will not be able to customize the header.
 	})
