@@ -25,7 +25,7 @@ go run demo-chatroom.go
 
 ### 后端
 
-api格式基于restful设计，登录功能使用jwt完成，许多接口需要登录状态，请求的时候需要携带JWT，具体请看[golang iris的jwt实践](https://segmentfault.com/a/1190000021187448，另外便于测试，JWT签发有效时间只设置了20分钟，过期需要重新登录。
+api格式基于restful设计，登录功能使用jwt完成，许多接口需要登录状态，请求的时候需要携带JWT，具体请看[golang iris的jwt实践](https://segmentfault.com/a/1190000021187448)，另外便于测试，JWT签发有效时间只设置了20分钟，过期需要重新登录。
 
 |功能|请求方式|地址|
 |-|-|-|
