@@ -33,4 +33,6 @@ require (
 	golang.org/x/tools v0.0.0-20191204011308-9611592c72f6 // indirect
 	golang.org/x/tools/gopls v0.2.1 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
+	xorm.io/core v0.7.2
+	xorm.io/xorm v0.8.1
 )

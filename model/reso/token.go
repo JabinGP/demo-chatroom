@@ -2,6 +2,6 @@ package reso
 
 // GetTokenInfo GET "/token/info" response object
 type GetTokenInfo struct {
-	ID       uint   `json:"id"`
+	ID       int64  `json:"id"`
 	Username string `json:"username"`
 }

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"github.com/JabinGP/demo-chatroom/model"
 	"github.com/JabinGP/demo-chatroom/model/pojo"
 	"github.com/JabinGP/demo-chatroom/model/reqo"
@@ -19,14 +20,14 @@ func PostLogin(ctx iris.Context) {
 	// Query user by username
 	user, err := userService.QueryByUsername(req.Username)
 	if err != nil {
-		ctx.JSON(new(model.ResModel).WithError(err.Error()))
+		ctx.JSON(model.ErrorQueryDatabase(err))
 		return
 	}
 
 	log.Println(user, req)
 	// If passwd are inconsistent
 	if user.Passwd != req.Passwd {
-		ctx.JSON(new(model.ResModel).WithError("username or passwd error"))
+		ctx.JSON(model.ErrorVerification(errors.New("用户名或密码错误")))
 		return
 	}
 
@@ -34,7 +35,7 @@ func PostLogin(ctx iris.Context) {
 	// Get token
 	token, err := tool.GetJWTString(user.Username, user.ID)
 	if err != nil {
-		ctx.JSON(new(model.ResModel).WithError(err.Error()))
+		ctx.JSON(model.ErrorBuildJWT(err))
 	}
 
 	res := reso.PostLogin{
@@ -42,7 +43,7 @@ func PostLogin(ctx iris.Context) {
 		ID:       user.ID,
 		Token:    token,
 	}
-	ctx.JSON(new(model.ResModel).WithData(res))
+	ctx.JSON(res)
 }
 
 // PostUser user register
@@ -52,7 +53,8 @@ func PostUser(ctx iris.Context) {
 
 	// Username and passwd can't be blank
 	if req.Username == "" || req.Passwd == "" {
-		ctx.JSON(new(model.ResModel).WithError("username or passwd cann't be blank"))
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(model.ErrorIncompleteData(errors.New("用户名和密码不能为空")))
 		return
 	}
 
@@ -61,7 +63,8 @@ func PostUser(ctx iris.Context) {
 
 	// Can't be same username
 	if exist.Username != "" {
-		ctx.JSON(new(model.ResModel).WithError("existed username"))
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(model.ErrorVerification(errors.New("用户名已存在")))
 		return
 	}
 
@@ -75,7 +78,8 @@ func PostUser(ctx iris.Context) {
 	}
 	userID, err := userService.Insert(newUser)
 	if err != nil {
-		ctx.JSON(new(model.ResModel).WithError(err.Error()))
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(model.ErrorInsertDatabase(err))
 		return
 	}
 
@@ -83,7 +87,7 @@ func PostUser(ctx iris.Context) {
 		Username: newUser.Username,
 		ID:       userID,
 	}
-	ctx.JSON(new(model.ResModel).WithData(res))
+	ctx.JSON(res)
 }
 
 // GetUser return user list
@@ -94,7 +98,8 @@ func GetUser(ctx iris.Context) {
 
 	userList, err := userService.Query(req.Username, req.ID)
 	if err != nil {
-		ctx.JSON(new(model.ResModel).WithError(err.Error()))
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(model.ErrorQueryDatabase(err))
 		return
 	}
 
@@ -109,7 +114,7 @@ func GetUser(ctx iris.Context) {
 
 		resList = append(resList, res)
 	}
-	ctx.JSON(new(model.ResModel).WithData(resList))
+	ctx.JSON(resList)
 }
 
 // PutUser update user information
@@ -117,7 +122,7 @@ func PutUser(ctx iris.Context) {
 	req := reqo.PutUser{}
 	ctx.ReadJSON(&req)
 	jwtInfo := ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)
-	userID := uint(jwtInfo["userId"].(float64))
+	userID := int64(jwtInfo["userId"].(float64))
 
 	// // Query user by userID
 	// user, err := userService.QueryByID(userID)
@@ -126,8 +131,9 @@ func PutUser(ctx iris.Context) {
 	// 	return
 	// }
 
-	user := pojo.User{}
-	user.ID = userID
+	user := pojo.User{
+		ID: userID,
+	}
 	// Replace if set
 	if req.Gender != 0 {
 		user.Gender = req.Gender
@@ -142,14 +148,16 @@ func PutUser(ctx iris.Context) {
 	// Update user
 	err := userService.Update(user)
 	if err != nil {
-		ctx.JSON(new(model.ResModel).WithError(err.Error()))
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(model.ErrorQueryDatabase(err))
 		return
 	}
 
 	// Get updated user
 	updatedUser, err := userService.QueryByID(user.ID)
 	if err != nil {
-		ctx.JSON(new(model.ResModel).WithError(err.Error()))
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(model.ErrorQueryDatabase(err))
 		return
 	}
 
@@ -160,5 +168,5 @@ func PutUser(ctx iris.Context) {
 		Age:      updatedUser.Age,
 		Interest: updatedUser.Interest,
 	}
-	ctx.JSON(new(model.ResModel).WithData(res))
+	ctx.JSON(res)
 }

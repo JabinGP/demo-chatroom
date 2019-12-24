@@ -2,8 +2,8 @@ package reso
 
 // GetMessage GET "/message" response object
 type GetMessage struct {
-	ID         uint   `json:"id"`
-	SenderID   uint   `json:"senderId"`
+	ID         int64  `json:"id"`
+	SenderID   int64  `json:"senderId"`
 	SenderName string `json:"senderName"`
 	Content    string `json:"content"`
 	SendTime   int64  `json:"sendTime"`
@@ -12,5 +12,5 @@ type GetMessage struct {
 
 // PostMessage POST "/message" response object
 type PostMessage struct {
-	ID uint `json:"id"`
+	ID int64 `json:"id"`
 }

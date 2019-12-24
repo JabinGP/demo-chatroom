@@ -5,23 +5,20 @@ import (
 	"time"
 
 	"github.com/JabinGP/demo-chatroom/model/pojo"
-	"github.com/jinzhu/gorm"
+	"xorm.io/xorm"
 )
 
 // MessageService message service
 type MessageService struct {
-	db *gorm.DB
+	db *xorm.Engine
 }
 
 // Query query message by ID, senderID, receiverID, beginTime, endTime
-func (messageService *MessageService) Query(beginID uint, beginTime time.Time, endTime time.Time, senderID uint, receiverID uint) ([]pojo.Message, error) {
-	var msgList []pojo.Message
-
-	// Fill nested struct User
-	tmpDB := messageService.db.Preload("Sender").Preload("Receiver")
+func (messageService *MessageService) Query(beginID int64, beginTime time.Time, endTime time.Time, receiverID int64) ([]pojo.MessageWithUser, error) {
+	var msgList []pojo.MessageWithUser
 
 	// Query received message and sended message
-	tmpDB = tmpDB.Where("receiver_id in (?,?) or sender_id = ?", 0, receiverID, senderID)
+	tmpDB := messageService.db.Where("message.receiver_id in (?,?) or message.sender_id = ?", 0, receiverID, receiverID)
 
 	// // Get sender message
 	// // if senderID != 0 {
@@ -29,17 +26,20 @@ func (messageService *MessageService) Query(beginID uint, beginTime time.Time, e
 	// // }
 
 	// Limit begin time
-	tmpDB = tmpDB.Where("send_time >= ?", beginTime)
+	tmpDB = tmpDB.Where("message.send_time >= ?", beginTime)
 	// Limit end time
 	if endTime != time.Unix(0, 0) && (endTime != time.Time{}) {
-		tmpDB = tmpDB.Where("send_time <= ?", endTime)
+		tmpDB = tmpDB.Where("message.send_time <= ?", endTime)
 	}
 
 	// Limit message id
-	tmpDB = tmpDB.Where("id > ?", beginID)
+	tmpDB = tmpDB.Where("message.id > ?", beginID)
 
+	tmpDB = tmpDB.Join("LEFT", []string{"user", "sender"}, "message.sender_id = sender.id")
+
+	tmpDB = tmpDB.Join("LEFT", []string{"user", "receiver"}, "message.receiver_id = receiver.id")
 	// Execute query
-	if err := tmpDB.Find(&msgList).Error; err != nil {
+	if err := tmpDB.Find(&msgList); err != nil {
 		return nil, err
 	}
 
@@ -47,12 +47,12 @@ func (messageService *MessageService) Query(beginID uint, beginTime time.Time, e
 }
 
 // Insert insert message and return insert id
-func (messageService *MessageService) Insert(senderID uint, receiverID uint, content string) (uint, error) {
+func (messageService *MessageService) Insert(senderID int64, receiverID int64, content string) (int64, error) {
 	msg := pojo.Message{
 		SenderID:   senderID,
 		ReceiverID: receiverID,
 		Content:    content,
-		SendTime:   time.Now(),
+		SendTime:   time.Now().Unix(),
 	}
 
 	// If no sender id
@@ -61,7 +61,7 @@ func (messageService *MessageService) Insert(senderID uint, receiverID uint, con
 	}
 
 	// Execute insert
-	if err := messageService.db.Table("messages").Create(&msg).Error; err != nil {
+	if _, err := messageService.db.Insert(&msg); err != nil {
 		return 0, err
 	}
 

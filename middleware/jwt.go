@@ -18,13 +18,9 @@ func initJWT() {
 			if err == nil {
 				return
 			}
-
 			ctx.StopExecution()
 			ctx.StatusCode(iris.StatusUnauthorized)
-			ctx.JSON(model.ResModel{
-				Code: "501",
-				Msg:  err.Error(),
-			})
+			ctx.JSON(model.ErrorUnauthorized(err))
 		},
 
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
