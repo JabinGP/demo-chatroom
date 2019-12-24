@@ -11,5 +11,5 @@ func routeUser(party router.Party) {
 
 	party.Post("/user", controller.PostUser)
 	party.Get("/user", controller.GetUser)
-	party.Put("/user", middleware.JWT.Serve, controller.PutUser)
+	party.Put("/user", middleware.JWT.Serve, middleware.Logined, controller.PutUser)
 }

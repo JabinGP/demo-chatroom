@@ -6,7 +6,6 @@ import (
 	"github.com/JabinGP/demo-chatroom/model"
 	"github.com/JabinGP/demo-chatroom/model/reqo"
 	"github.com/JabinGP/demo-chatroom/model/reso"
-	"github.com/iris-contrib/middleware/jwt"
 	"github.com/kataras/iris/v12"
 )
 
@@ -14,10 +13,9 @@ import (
 func PostMessage(ctx iris.Context) {
 	req := reqo.PostMessage{}
 	ctx.ReadJSON(&req)
-	jwtInfo := ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)
-	userID := int64(jwtInfo["userId"].(float64))
+	logined := ctx.Values().Get("logined").(model.Logined)
 
-	insertID, err := messageService.Insert(userID, req.ReceiverID, req.Content)
+	insertID, err := messageService.Insert(logined.ID, req.ReceiverID, req.Content)
 	if err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
 		ctx.JSON(model.ErrorInsertDatabase(err))
@@ -35,14 +33,13 @@ func PostMessage(ctx iris.Context) {
 func GetMessage(ctx iris.Context) {
 	req := reqo.GetMessage{}
 	ctx.ReadQuery(&req)
-	jwtInfo := ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)
-	userID := int64(jwtInfo["userId"].(float64))
+	logined := ctx.Values().Get("logined").(model.Logined)
 
 	msgList, err := messageService.Query(
 		req.BeginID,
 		time.Unix(req.BeginTime, 0),
 		time.Unix(req.EndTime, 0),
-		userID,
+		logined.ID,
 	)
 	if err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)

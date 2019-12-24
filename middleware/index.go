@@ -8,5 +8,6 @@ func init() {
 	once.Do(func() {
 		initJWT()
 		initCORS()
+		initUserInfo()
 	})
 }

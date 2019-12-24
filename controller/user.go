@@ -2,14 +2,14 @@ package controller
 
 import (
 	"errors"
+	"log"
+
 	"github.com/JabinGP/demo-chatroom/model"
 	"github.com/JabinGP/demo-chatroom/model/pojo"
 	"github.com/JabinGP/demo-chatroom/model/reqo"
 	"github.com/JabinGP/demo-chatroom/model/reso"
 	"github.com/JabinGP/demo-chatroom/tool"
-	"github.com/iris-contrib/middleware/jwt"
 	"github.com/kataras/iris/v12"
-	"log"
 )
 
 // PostLogin user login
@@ -121,8 +121,7 @@ func GetUser(ctx iris.Context) {
 func PutUser(ctx iris.Context) {
 	req := reqo.PutUser{}
 	ctx.ReadJSON(&req)
-	jwtInfo := ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)
-	userID := int64(jwtInfo["userId"].(float64))
+	logined := ctx.Values().Get("logined").(model.Logined)
 
 	// // Query user by userID
 	// user, err := userService.QueryByID(userID)
@@ -132,7 +131,7 @@ func PutUser(ctx iris.Context) {
 	// }
 
 	user := pojo.User{
-		ID: userID,
+		ID: logined.ID,
 	}
 	// Replace if set
 	if req.Gender != 0 {

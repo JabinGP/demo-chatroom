@@ -7,5 +7,5 @@ import (
 )
 
 func routeToken(party router.Party) {
-	party.Get("/token/info", middleware.JWT.Serve, controller.GetTokenInfo)
+	party.Get("/token/info", middleware.JWT.Serve, middleware.Logined, controller.GetTokenInfo)
 }
