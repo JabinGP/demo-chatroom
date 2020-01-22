@@ -1,6 +1,6 @@
 # demo-chatroom
 
-go+iris+jwt+mysql+gorm+viper，iris 项目实战简易聊天室，登录、注册、私聊、群聊。
+go+iris+jwt+mysql+xorm+viper，iris 项目实战简易聊天室，登录、注册、私聊、群聊。
 
 ## 浏览 demo
 
@@ -218,7 +218,7 @@ api 列表如下，把 localhost 换成 mike.jabingp.cn 也可以直接请求到
 
   - Iris 后端框架
   - React 前端框架
-  - Gorm 数据库 ORM 框架
+  - Xorm 数据库 ORM 框架
   - Viper 多类型配置文件读取支持
 
 - 数据存储
@@ -231,7 +231,7 @@ api 列表如下，把 localhost 换成 mike.jabingp.cn 也可以直接请求到
 
 ## 数据库设计结构
 
-> 由于使用了 Gorm 数据库 ORM 框架，以下表都是自动生成的，自带了`xxxxxx_at`字段
+> 由于使用了 Xorm 数据库 ORM 框架，以下表都是自动生成的，自带了`xxxxxx_at`字段
 
 基于如上的需求，设计了`users`和`messages`两个表
 
@@ -247,18 +247,17 @@ api 列表如下，把 localhost 换成 mike.jabingp.cn 也可以直接请求到
 - interest
 
 数据库表结构
-
-| Field      | Type               | Null | Key | Default | Extra          |
-| :--------- | :----------------- | :--- | :-- | :------ | :------------- |
-| id         | int\(10\) unsigned | NO   | PRI | NULL    | auto_increment |
-| created_at | timestamp          | YES  |     | NULL    |                |
-| updated_at | timestamp          | YES  |     | NULL    |                |
-| deleted_at | timestamp          | YES  | MUL | NULL    |                |
-| username   | varchar\(255\)     | YES  |     | NULL    |                |
-| passwd     | varchar\(255\)     | YES  |     | NULL    |                |
-| gender     | bigint\(20\)       | YES  |     | NULL    |                |
-| age        | bigint\(20\)       | YES  |     | NULL    |                |
-| interest   | varchar\(255\)     | YES  |     | NULL    |                |
+| Field | Type | Null | Key | Default | Extra |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| id | bigint\(20\) | NO | PRI | NULL | auto_increment |
+| username | varchar\(255\) | YES | | NULL | |
+| passwd | varchar\(255\) | YES | | NULL | |
+| gender | bigint\(20\) | YES | | NULL | |
+| age | bigint\(20\) | YES | | NULL | |
+| interest | varchar\(255\) | YES | | NULL | |
+| created_at | datetime | YES | | NULL | |
+| updated_at | datetime | YES | | NULL | |
+| deleted_at | datetime | YES | | NULL | |
 
 ### messages
 
@@ -272,16 +271,16 @@ api 列表如下，把 localhost 换成 mike.jabingp.cn 也可以直接请求到
 
 数据库表结构
 
-| Field       | Type               | Null | Key | Default | Extra          |
-| :---------- | :----------------- | :--- | :-- | :------ | :------------- |
-| id          | int\(10\) unsigned | NO   | PRI | NULL    | auto_increment |
-| created_at  | timestamp          | YES  |     | NULL    |                |
-| updated_at  | timestamp          | YES  |     | NULL    |                |
-| deleted_at  | timestamp          | YES  | MUL | NULL    |                |
-| sender_id   | int\(10\) unsigned | YES  |     | NULL    |                |
-| receiver_id | int\(10\) unsigned | YES  |     | NULL    |                |
-| content     | varchar\(255\)     | YES  |     | NULL    |                |
-| send_time   | timestamp          | YES  |     | NULL    |                |
+| Field       | Type           | Null | Key | Default | Extra          |
+| :---------- | :------------- | :--- | :-- | :------ | :------------- |
+| id          | bigint\(20\)   | NO   | PRI | NULL    | auto_increment |
+| sender_id   | bigint\(20\)   | YES  |     | NULL    |                |
+| receiver_id | bigint\(20\)   | YES  |     | NULL    |                |
+| content     | varchar\(255\) | YES  |     | NULL    |                |
+| send_time   | bigint\(20\)   | YES  |     | NULL    |                |
+| created_at  | datetime       | YES  |     | NULL    |                |
+| updated_at  | datetime       | YES  |     | NULL    |                |
+| deleted_at  | datetime       | YES  |     | NULL    |                |
 
 ## 项目结构
 
