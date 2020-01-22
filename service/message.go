@@ -14,7 +14,7 @@ type MessageService struct {
 }
 
 // Query query message by ID, senderID, receiverID, beginTime, endTime
-func (messageService *MessageService) Query(beginID int64, beginTime time.Time, endTime time.Time, receiverID int64) ([]pojo.MessageWithUser, error) {
+func (messageService *MessageService) Query(beginID int64, beginTime int64, endTime int64, receiverID int64) ([]pojo.MessageWithUser, error) {
 	var msgList []pojo.MessageWithUser
 
 	// Query received message and sended message
@@ -28,7 +28,7 @@ func (messageService *MessageService) Query(beginID int64, beginTime time.Time, 
 	// Limit begin time
 	tmpDB = tmpDB.Where("message.send_time >= ?", beginTime)
 	// Limit end time
-	if endTime != time.Unix(0, 0) && (endTime != time.Time{}) {
+	if endTime != 0 {
 		tmpDB = tmpDB.Where("message.send_time <= ?", endTime)
 	}
 

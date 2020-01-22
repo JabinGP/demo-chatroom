@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"time"
-
 	"github.com/JabinGP/demo-chatroom/model"
 	"github.com/JabinGP/demo-chatroom/model/reqo"
 	"github.com/JabinGP/demo-chatroom/model/reso"
@@ -37,8 +35,8 @@ func GetMessage(ctx iris.Context) {
 
 	msgList, err := messageService.Query(
 		req.BeginID,
-		time.Unix(req.BeginTime, 0),
-		time.Unix(req.EndTime, 0),
+		req.BeginTime,
+		req.EndTime,
 		logined.ID,
 	)
 	if err != nil {

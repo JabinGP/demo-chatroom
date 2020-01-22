@@ -20,6 +20,7 @@ func PostLogin(ctx iris.Context) {
 	// Query user by username
 	user, err := userService.QueryByUsername(req.Username)
 	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(model.ErrorQueryDatabase(err))
 		return
 	}
@@ -27,6 +28,7 @@ func PostLogin(ctx iris.Context) {
 	log.Println(user, req)
 	// If passwd are inconsistent
 	if user.Passwd != req.Passwd {
+		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(model.ErrorVerification(errors.New("用户名或密码错误")))
 		return
 	}
@@ -35,6 +37,7 @@ func PostLogin(ctx iris.Context) {
 	// Get token
 	token, err := tool.GetJWTString(user.Username, user.ID)
 	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
 		ctx.JSON(model.ErrorBuildJWT(err))
 	}
 
