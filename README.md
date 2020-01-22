@@ -247,17 +247,18 @@ api 列表如下，把 localhost 换成 mike.jabingp.cn 也可以直接请求到
 - interest
 
 数据库表结构
-| Field | Type | Null | Key | Default | Extra |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| id | bigint\(20\) | NO | PRI | NULL | auto_increment |
-| username | varchar\(255\) | YES | | NULL | |
-| passwd | varchar\(255\) | YES | | NULL | |
-| gender | bigint\(20\) | YES | | NULL | |
-| age | bigint\(20\) | YES | | NULL | |
-| interest | varchar\(255\) | YES | | NULL | |
-| created_at | datetime | YES | | NULL | |
-| updated_at | datetime | YES | | NULL | |
-| deleted_at | datetime | YES | | NULL | |
+
+| Field      | Type           | Null | Key | Default | Extra          |
+| :--------- | :------------- | :--- | :-- | :------ | :------------- |
+| id         | bigint\(20\)   | NO   | PRI | NULL    | auto_increment |
+| username   | varchar\(255\) | YES  |     | NULL    |                |
+| passwd     | varchar\(255\) | YES  |     | NULL    |                |
+| gender     | bigint\(20\)   | YES  |     | NULL    |                |
+| age        | bigint\(20\)   | YES  |     | NULL    |                |
+| interest   | varchar\(255\) | YES  |     | NULL    |                |
+| created_at | datetime       | YES  |     | NULL    |                |
+| updated_at | datetime       | YES  |     | NULL    |                |
+| deleted_at | datetime       | YES  |     | NULL    |                |
 
 ### messages
 
