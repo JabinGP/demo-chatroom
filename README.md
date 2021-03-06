@@ -6,7 +6,7 @@ go+iris+jwt+mysql+xorm+viper，iris 项目实战简易聊天室，登录、注�
 
 先看看本文档下面的前端介绍，知道如何操作（因为精力有限，ui 并不是特别人性化）。
 
-访问演示地址`http://mike.jabingp.cn:8888`。
+访问演示地址`https://preview-demo-chatroom.herokuapp.com/`，如果打不开请等几十秒再尝试一次。
 
 ## 项目启动
 
