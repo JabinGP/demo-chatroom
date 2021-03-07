@@ -4,9 +4,11 @@ go+iris+jwt+mysql+xorm+viper，iris 项目实战简易聊天室，登录、注�
 
 ## 浏览 demo
 
+[![Ping preview-site](https://github.com/JabinGP/demo-chatroom/actions/workflows/ping-preview.yml/badge.svg)](https://github.com/JabinGP/demo-chatroom/actions/workflows/ping-preview.yml)
+
 先看看本文档下面的前端介绍，知道如何操作（因为精力有限，ui 并不是特别人性化）。
 
-访问演示地址`https://preview-demo-chatroom.herokuapp.com/`，如果打不开请等几十秒再尝试一次。
+访问[演示地址](https://preview-demo-chatroom.herokuapp.com/)，如果上方小图标状态是正常的则可以访问，可能会进入休眠状态，需要稍微等几秒。
 
 ## 项目启动
 
