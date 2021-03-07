@@ -1,0 +1,18 @@
+name: Ping preview-site
+# This workflow is triggered at a scheduled interval of every 30 minutes
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string.
+    # /30 denotes that it will run once every 30 minutes
+    - cron:  '*/28 * * * *'
+
+jobs:
+  pinger_job:
+    name: Ping preview-site
+    runs-on: ubuntu-latest
+    env:
+      URL: ${{ secrets.PREVIEW_URL }}
+      METHOD: GET  # the method used to make the request. It is GET by default
+    steps:
+      - id: ping
+        uses: sisodiya2421/pinger@master
