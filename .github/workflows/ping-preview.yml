@@ -4,7 +4,8 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string.
     # /30 denotes that it will run once every 30 minutes
-    - cron:  '*/28 * * * *'
+    # every day
+    - cron:  '0 0 * * *'
 
 jobs:
   pinger_job:
